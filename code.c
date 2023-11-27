@@ -55,21 +55,22 @@ struct DonationInfo* pop();
 void display();
 void searchAndDisplay(const char* searchTerm, int searchType);
 void toLowercase(char* str);
-void saveToFile();
 void loadFromFile();
+void saveToFile(struct Patient* patientRecords, struct Event* eventStack);
+struct Patient* patientRecords = NULL;
+struct Event* eventStack = NULL;
+
 
 int main() {
     int choice, ch2;
-    struct Patient* patientRecords = NULL;
-    struct Event* eventStack = NULL;
 
     do {
         printf("\n");
         printf("1. Calculate BMI\n");
         printf("2. Calculate Step Count\n");
         printf("3. Patient (Add and Display)\n");
-        printf("4. Events\n");
-        printf("5. Blood Donation Information\n");
+        printf("4. Blood Donation Information\n");  // Moved Blood Donation Information to option 4
+        printf("5. Events\n");  // Moved Events to option 5
         printf("6. Exit\n");
 
         printf("\nEnter your Choice (1-6): ");
@@ -117,54 +118,6 @@ int main() {
                 break;
             }
             case 4: {
-    int subChoice;
-    printf("1. Create Event\n");
-    printf("2. Delete Event\n");
-    printf("3. Display Events\n");
-    printf("\nEnter sub-choice (1-3): ");
-    scanf("%d", &subChoice);
-
-    switch (subChoice) {
-        case 1: {
-            char eventName[100], date[20], place[50];
-
-            printf("Enter Event Name: ");
-            scanf(" %99[^\n]", eventName);
-            getchar();  // Consume the newline character
-
-            printf("Enter Event Date: ");
-            scanf(" %19[^\n]", date);
-            getchar();  // Consume the newline character
-
-            printf("Enter Event Place: ");
-            scanf("%s", place);
-
-            struct Event* newEvent = createEvent(eventName, date, place);
-            pushEvent(&eventStack, newEvent);
-            break;
-        }
-        case 2: {
-            struct Event* poppedEvent = popEvent(&eventStack);
-            if (poppedEvent != NULL) {
-                printf("Popped Event from Stack:\n");
-                printf("Event Name: %s\n", poppedEvent->eventName);
-                printf("Date: %s\n", poppedEvent->date);
-                printf("Place: %s\n", poppedEvent->place);
-                printf("\n");
-            }
-            break;
-        }
-        case 3:
-            displayEvents(eventStack);
-            break;
-        default:
-            printf("Invalid sub-choice.\n");
-            break;
-    }
-    break;
-}
-
-            case 5: {
                 int subChoice;
                 printf("1. Add Blood Donation Information\n");
                 printf("2. Delete Blood Donation Information\n");
@@ -240,8 +193,59 @@ int main() {
                         break;
                 }
                 break;
+    
+}
+
+            case 5: {
+                int subChoice;
+    printf("1. Create Event\n");
+    printf("2. Delete Event\n");
+    printf("3. Display Events\n");
+    printf("\nEnter sub-choice (1-3): ");
+    scanf("%d", &subChoice);
+
+    switch (subChoice) {
+        case 1: {
+            char eventName[100], date[20], place[50];
+
+            printf("Enter Event Name: ");
+            scanf(" %99[^\n]", eventName);
+            getchar();  // Consume the newline character
+
+            printf("Enter Event Date: ");
+            scanf(" %19[^\n]", date);
+            getchar();  // Consume the newline character
+
+            printf("Enter Event Place: ");
+            scanf("%s", place);
+
+            struct Event* newEvent = createEvent(eventName, date, place);
+            pushEvent(&eventStack, newEvent);
+            break;
+        }
+        case 2: {
+            struct Event* poppedEvent = popEvent(&eventStack);
+            if (poppedEvent != NULL) {
+                printf("Popped Event from Stack:\n");
+                printf("Event Name: %s\n", poppedEvent->eventName);
+                printf("Date: %s\n", poppedEvent->date);
+                printf("Place: %s\n", poppedEvent->place);
+                printf("\n");
+            }
+            break;
+        }
+        case 3:
+            displayEvents(eventStack);
+            break;
+        default:
+            printf("Invalid sub-choice.\n");
+            break;
+    }
+    break;
+                
             }
             case 6: {
+                saveToFile(patientRecords, eventStack);
                 while (patientRecords != NULL) {
                     struct Patient* temp = patientRecords;
                     patientRecords = patientRecords->next;
@@ -565,44 +569,78 @@ void toLowercase(char* str) {
     }
 }
 
-void saveToFile() {
-    FILE* file = fopen("blood_donations.txt", "w");
+void saveToFile(struct Patient* patientRecords, struct Event* eventStack) {
+    FILE* file = fopen("health_records.txt", "w");
     if (file == NULL) {
         printf("Error opening file for writing.\n");
         return;
     }
 
-    struct StackNode* current = top;
+    // Save patient information
+    struct Patient* currentPatient = patientRecords;
+    while (currentPatient != NULL) {
+        fprintf(file, "Patient %s %d %.2f %.2f %.2f\n", currentPatient->name, currentPatient->age,
+                currentPatient->height, currentPatient->weight, currentPatient->bmi);
 
-    while (current != NULL) {
-        fprintf(file, "%s %s %s %s %s\n", current->donationInfo->donorName,
-                current->donationInfo->bloodType, current->donationInfo->donationDate,
-                current->donationInfo->location, current->donationInfo->mobileNumber);
+        currentPatient = currentPatient->next;
+    }
 
-        current = current->next;
+    // Save event information
+    struct Event* currentEvent = eventStack;
+    while (currentEvent != NULL) {
+        fprintf(file, "Event %s %s %s\n", currentEvent->eventName, currentEvent->date, currentEvent->place);
+
+        currentEvent = currentEvent->next;
+    }
+
+    // Save blood donor information
+    struct StackNode* currentDonation = top;
+    while (currentDonation != NULL) {
+        fprintf(file, "Donor %s %s %s %s %s\n", currentDonation->donationInfo->donorName,
+                currentDonation->donationInfo->bloodType, currentDonation->donationInfo->donationDate,
+                currentDonation->donationInfo->location, currentDonation->donationInfo->mobileNumber);
+
+        currentDonation = currentDonation->next;
     }
 
     fclose(file);
+
+    printf("Data saved to health_records.txt\n");
 }
 
+
+
 void loadFromFile() {
-     FILE* file = fopen("blood_donations.txt", "r");
+    FILE* file = fopen("health_records.txt", "r");
     if (file == NULL) {
         printf("No existing data file found.\n");
         return;
     }
 
     while (true) {
-        char donorName[100], bloodType[5], donationDate[20], location[50], mobileNumber[15];
+        char type[10], name[100], bloodType[5], date[20], place[50], mobileNumber[15];
+        int age;
+        float height, weight, bmi;
 
-        if (fscanf(file, "%s %s %s %s %s", donorName, bloodType, donationDate, location, mobileNumber) != 5) {
+        if (fscanf(file, "%s", type) == EOF) {
             break;
         }
 
-        struct DonationInfo* newDonation = createDonationInfo(donorName, bloodType, donationDate, location, mobileNumber);
-        push(newDonation);
+        if (strcmp(type, "Patient") == 0) {
+            fscanf(file, "%s %d %f %f %f", name, &age, &height, &weight, &bmi);
+            struct Patient* newPatient = createPatient(name, age, height, weight);
+            insertPatient(&patientRecords, newPatient);
+        } else if (strcmp(type, "Event") == 0) {
+            fscanf(file, "%s %s %s", name, date, place);
+            struct Event* newEvent = createEvent(name, date, place);
+            pushEvent(&eventStack, newEvent);
+        } else if (strcmp(type, "Donor") == 0) {
+            fscanf(file, "%s %s %s %s %s", name, bloodType, date, place, mobileNumber);
+            struct DonationInfo* newDonation = createDonationInfo(name, bloodType, date, place, mobileNumber);
+            push(newDonation);
+        }
     }
 
     fclose(file);
-
 }
+
