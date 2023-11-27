@@ -97,10 +97,59 @@ struct Event* eventStack = NULL;
 int main() {
     int choice, ch2;
 
+    printf("\n");
+    
+    cyan();
+    printf("H");
+    red();
+    printf("E");
+    yellow();
+    printf("A");
+    blue();
+    printf("L");
+    green();
+    printf("T");
+    red();
+    printf("H ");
+    
+    yellow();
+    printf("C");
+    blue();
+    printf("A");
+    green();
+    printf("R");
+    purple();
+    printf("E ");
+
+    green();
+    printf("A");
+    yellow();
+    printf("N");
+    purple();
+    printf("A");
+    cyan();
+    printf("L");
+    red();
+    printf("Y");
+    red();
+    printf("S");
+    yellow();
+    printf("I");
+    blue();
+    printf("S");
+
+    blue();
+    printf("\n_______");
+    red();
+    printf("______");
+    green();
+    printf("_______");
+    printf("\n");
+    
     do {
         printf("\n");
         green();
-        printf("Main Option:\n------------\n\n");
+        printf("Main Menu:\n----------\n\n");
         purple();
         printf("1. Calculate BMI\n");
         printf("2. Calculate Step Count\n");
