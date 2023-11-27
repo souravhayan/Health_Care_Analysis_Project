@@ -5,6 +5,30 @@
 #include <ctype.h>
 #include <stdbool.h>
 
+void red () {
+  printf("\033[1;31m");
+}
+
+void blue () {
+  printf("\033[0;34m");
+}
+
+void purple () {
+  printf("\033[0;35m");
+}
+
+void cyan () {
+  printf("\033[0;36m");
+}
+
+void green () {
+  printf("\033[0;32m");
+}
+
+void yellow () {
+  printf("\033[0;33m");
+}
+
 struct Patient {
     char name[100];
     int age;
@@ -66,13 +90,16 @@ int main() {
 
     do {
         printf("\n");
+        green();
+        printf("Main Option:\n------------\n\n");
+        cyan();
         printf("1. Calculate BMI\n");
         printf("2. Calculate Step Count\n");
         printf("3. Patient (Add and Display)\n");
         printf("4. Blood Donation Information\n");  // Moved Blood Donation Information to option 4
         printf("5. Events\n");  // Moved Events to option 5
         printf("6. Exit\n");
-
+        yellow();
         printf("\nEnter your Choice (1-6): ");
         scanf("%d", &choice);
 
@@ -85,8 +112,11 @@ int main() {
                 break;
             case 3: {
                 int subChoice;
+                printf("\n");
+                cyan();
                 printf("1. Add Patient\n");
                 printf("2. Display Patient Records\n");
+                yellow();
                 printf("\nEnter sub-choice (1-2): ");
                 scanf("%d", &subChoice);
 
@@ -96,6 +126,8 @@ int main() {
                         int age;
                         float height, weight;
 
+                        purple();
+                        printf("\n");
                         printf("Enter patient name: ");
                         scanf(" %99[^\n]", name);
                         printf("Enter patient age: ");
@@ -112,6 +144,7 @@ int main() {
                         displayPatients(patientRecords);
                         break;
                     default:
+                    red();
                         printf("Invalid sub-choice.\n");
                         break;
                 }
@@ -174,6 +207,7 @@ int main() {
                         break;
                     case 4: {
                         int searchType;
+        
                         printf("Press 1 to search by Blood Type, 2 for Location, or 3 for Mobile Number: ");
                         scanf("%d", &searchType);
 
@@ -271,6 +305,7 @@ int main() {
                 printf("Invalid choice.\n");
         }
 
+        red();
         printf("\nPress 1 for RUN Again or Press any key to EXIT!\n");
         scanf("%d", &ch2);
     } while (ch2 == 1);
@@ -480,8 +515,9 @@ struct DonationInfo* pop() {
 
 void display() {
     struct StackNode* current = top;
-
-    printf("\nBlood Donation Information:\n");
+    
+    green();
+    printf("\nBlood Donation Information:\n---------------------------\n\n");
 
     while (current != NULL) {
         printf("Donor Name: %s\n", current->donationInfo->donorName);
@@ -554,11 +590,13 @@ void searchAndDisplay(const char* searchTerm, int searchType) {
             break;
 
         default:
+            red();
             printf("Invalid search type.\n");
             return;
     }
 
     if (!found) {
+        red();
         printf("No matching records found.\n");
     }
 }
