@@ -9,6 +9,10 @@ void red () {
   printf("\033[1;31m");
 }
 
+void red2 () {
+  printf("\033[0;31m");
+}
+
 void blue () {
   printf("\033[1;34m");
 }
@@ -243,16 +247,20 @@ int main() {
 
             case 5: {
                 int subChoice;
-    printf("1. Create Event\n");
+    purple();
+    printf("\n1. Create Event\n");
     printf("2. Delete Event\n");
     printf("3. Display Events\n");
+    yellow();
     printf("\nEnter sub-choice (1-3): ");
     scanf("%d", &subChoice);
+    printf("\n");
 
     switch (subChoice) {
         case 1: {
             char eventName[100], date[20], place[50];
-
+            
+            blue();
             printf("Enter Event Name: ");
             scanf(" %99[^\n]", eventName);
             getchar();  // Consume the newline character
@@ -271,10 +279,12 @@ int main() {
         case 2: {
             struct Event* poppedEvent = popEvent(&eventStack);
             if (poppedEvent != NULL) {
-                printf("Popped Event from Stack:\n");
+                red();
+                printf("Deleted Event from List:\n\n");
+                cyan();
                 printf("Event Name: %s\n", poppedEvent->eventName);
                 printf("Date: %s\n", poppedEvent->date);
-                printf("Place: %s\n", poppedEvent->place);
+                printf("Place: %s", poppedEvent->place);
                 printf("\n");
             }
             break;
@@ -283,6 +293,7 @@ int main() {
             displayEvents(eventStack);
             break;
         default:
+        red();
             printf("Invalid sub-choice.\n");
             break;
     }
@@ -316,7 +327,7 @@ int main() {
                 printf("Invalid choice.\n");
         }
 
-        red();
+        red2();
         printf("\nPress 1 for RUN Again or Press any key to EXIT!\n");
         scanf("%d", &ch2);
     } while (ch2 == 1);
@@ -472,7 +483,8 @@ void pushEvent(struct Event** top, struct Event* newEvent) {
 
 struct Event* popEvent(struct Event** top) {
      if (*top == NULL) {
-        printf("STACK UNDERFLOW!\n");
+        red();
+        printf("NO EVENT AVAILABLE!!!\n");
         return NULL;
     }
 
@@ -485,7 +497,9 @@ struct Event* popEvent(struct Event** top) {
 
 void displayEvents(struct Event* top) {
      struct Event* current = top;
-    printf("\nUpcoming Events:\n");
+     green();
+    printf("\nUpcoming Events:\n\n");
+    cyan();
     while (current != NULL) {
         printf("Event Name: %s\n", current->eventName);
         printf("Date: %s\n", current->date);
