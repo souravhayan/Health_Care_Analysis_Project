@@ -174,7 +174,7 @@ int main() {
                         char donorName[100], bloodType[5], donationDate[20], location[50], mobileNumber[15];
 
                         printf("Enter donor name: ");
-                        scanf("%s", donorName);
+                        scanf(" %99[^\n]", donorName);
 
                         printf("Enter blood type (A+, A-, B+, B-, AB+, AB-, O+, O-): ");
                         scanf("%s", bloodType);
