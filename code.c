@@ -10,24 +10,29 @@ void red () {
 }
 
 void blue () {
-  printf("\033[0;34m");
+  printf("\033[1;34m");
 }
 
 void purple () {
-  printf("\033[0;35m");
+  printf("\033[1;35m");
 }
 
 void cyan () {
+  printf("\033[1;36m");
+}
+
+void cyan2 () {
   printf("\033[0;36m");
 }
 
 void green () {
-  printf("\033[0;32m");
+  printf("\033[1;32m");
 }
 
 void yellow () {
   printf("\033[0;33m");
 }
+
 
 struct Patient {
     char name[100];
@@ -92,10 +97,10 @@ int main() {
         printf("\n");
         green();
         printf("Main Option:\n------------\n\n");
-        cyan();
+        purple();
         printf("1. Calculate BMI\n");
         printf("2. Calculate Step Count\n");
-        printf("3. Patient (Add and Display)\n");
+        printf("3. Patient Information\n");
         printf("4. Blood Donation Information\n");  // Moved Blood Donation Information to option 4
         printf("5. Events\n");  // Moved Events to option 5
         printf("6. Exit\n");
@@ -113,7 +118,7 @@ int main() {
             case 3: {
                 int subChoice;
                 printf("\n");
-                cyan();
+                purple();
                 printf("1. Add Patient\n");
                 printf("2. Display Patient Records\n");
                 yellow();
@@ -126,7 +131,7 @@ int main() {
                         int age;
                         float height, weight;
 
-                        purple();
+                        blue();
                         printf("\n");
                         printf("Enter patient name: ");
                         scanf(" %99[^\n]", name);
@@ -152,10 +157,13 @@ int main() {
             }
             case 4: {
                 int subChoice;
+                purple();
+                printf("\n");
                 printf("1. Add Blood Donation Information\n");
                 printf("2. Delete Blood Donation Information\n");
                 printf("3. Display Blood Donation Information\n");
                 printf("4. Search Blood Donation Information\n");
+                yellow();
                 printf("\nEnter sub-choice (1-4): ");
                 scanf("%d", &subChoice);
 
@@ -163,10 +171,11 @@ int main() {
                     case 1: {
                         char donorName[100], bloodType[5], donationDate[20], location[50], mobileNumber[15];
 
-                        printf("Enter donor name: ");
+                        blue();
+                        printf("\nEnter Donor Name: ");
                         scanf(" %99[^\n]", donorName);
 
-                        printf("Enter blood type (A+, A-, B+, B-, AB+, AB-, O+, O-): ");
+                        printf("Enter Blood Type (A+, A-, B+, B-, AB+, AB-, O+, O-): ");
                         scanf("%s", bloodType);
 
                         if (strcmp(bloodType, "A+") != 0 && strcmp(bloodType, "A-") != 0 &&
@@ -177,15 +186,15 @@ int main() {
                             continue;
                         }
 
-                        printf("Enter donation date(DD-MM-YYYY): ");
+                        printf("Enter Donation Date (DD-MM-YYYY): ");
                         scanf("%s", donationDate);
 
-                        printf("Enter location: ");
+                        printf("Enter Location: ");
                         scanf("%s", location);
 
                         toLowercase(location);
 
-                        printf("Enter mobile number: ");
+                        printf("Enter Mobile Number: ");
                         scanf("%s", mobileNumber);
 
                         struct DonationInfo* newDonation =
@@ -207,8 +216,9 @@ int main() {
                         break;
                     case 4: {
                         int searchType;
-        
-                        printf("Press 1 to search by Blood Type, 2 for Location, or 3 for Mobile Number: ");
+                        
+                        blue();
+                        printf("\nPress 1 to search by Blood Type, 2 for Location, or 3 for Mobile Number: ");
                         scanf("%d", &searchType);
 
                         char searchTerm[50];
@@ -223,6 +233,7 @@ int main() {
                         break;
                     }
                     default:
+                    red();
                         printf("Invalid sub-choice.\n");
                         break;
                 }
@@ -344,7 +355,9 @@ void insertPatient(struct Patient** head, struct Patient* newPatient) {
 
 void displayPatients(struct Patient* head) {
     struct Patient* current = head;
+    green();
     printf("\n\nPatient Records:\n----------------\n\n");
+    cyan();
     while (current != NULL) {
         printf("Name: %s\n", current->name);
         printf("Age: %d\n", current->age);
@@ -358,9 +371,12 @@ void displayPatients(struct Patient* head) {
 
 void calculateBMI() {
      float weight, height, result, bmi;
-    printf("+---------------------+\n| BMI Report Analysis |\n+---------------------+\n\n");
+     green();
+    printf("\n+---------------------+\n| BMI Report Analysis |\n+---------------------+\n\n");
+    cyan();
     printf("BMI-range scale_\n");
     printf("-----!-----!-------!------!------!---\n     15  18.5      25     30     35\n\n");
+    blue();
     printf("Enter your weight (kg): ");
     scanf("%f", &weight);
 
@@ -370,7 +386,8 @@ void calculateBMI() {
     result = pow(height, 2);
 
     bmi = (weight / result);
-    printf("Your BMI is: %.1f --> ", bmi);
+    cyan();
+    printf("\nYour BMI is: %.1f --> ", bmi);
 
     if (bmi < 18.5) {
         printf("Bad Health\n\n");
@@ -389,37 +406,47 @@ void calculateBMI() {
     } else if (bmi > 25 && bmi < 30) {
         printf("Bad Health \n");
         printf("-----!-----!------!--+---!------!---\n     15  18.5    25     30     35\n");
-    } else {
+    } else if (bmi > 30 && bmi < 35){
+        printf("Bad Health \n");
+        printf("-----!-----!------!--+---!---+--!---\n     15  18.5    25     30     35\n");
+    }
+     else {
         printf("Bad Health\n");
     }
-
-    printf("Thank You!\n");
+    green();
+    printf("\n_____Thank You!_____\n");
 
 }
 
 void calculateStepCount() {
     int limit = 8000;
     float step, km, kmf = 5.30, percent;
+    
+    cyan();
+    printf("\n+---------------------+\n|  Step Count Report  |  1. km. to step_\n+---------------------+\n\n");
 
-    printf("\n\n+---------------------+\n|  Step Count Report  |  1. km. to step_\n+---------------------+\n");
-
-    printf("Today's target 8000 step count_\n\n");
-
+    printf("__Today's target 8000 step__\n\n");
+    blue();
     printf("Enter your km: ");
     scanf("%f", &km);
 
     step = (km * limit) / kmf;
-
-    printf("Your step counted: %.0f steps (approximate)\n", step);
+    
+    cyan();
+    printf("\nYour step counted: %.0f steps ", step);
+    cyan2();
+    printf("(approximate)\n");
+    cyan();
 
     percent = (step * 100) / limit;
 
     if (step >= limit) {
-        printf("Your target fulfilled 100%%\n\n");
+        printf("Your target fulfilled: 100%%\n\n");
     } else {
-        printf("Your target fulfilled %.2f%%\n\n", percent);
+        printf("Your target fulfilled: %.2f%%\n\n", percent);
     }
 
+    green();
     printf("Thank you!\n");
 }
 
@@ -520,6 +547,7 @@ void display() {
     printf("\nBlood Donation Information:\n---------------------------\n\n");
 
     while (current != NULL) {
+        cyan();
         printf("Donor Name: %s\n", current->donationInfo->donorName);
         printf("Blood Type: %s\n", current->donationInfo->bloodType);
         printf("Donation Date: %s\n", current->donationInfo->donationDate);
@@ -534,7 +562,8 @@ void display() {
 void searchAndDisplay(const char* searchTerm, int searchType) {
      struct StackNode* current = top;
     int found = 0;
-
+    
+    cyan();
     printf("\nBlood Donation Information for ");
 
     switch (searchType) {
@@ -597,7 +626,7 @@ void searchAndDisplay(const char* searchTerm, int searchType) {
 
     if (!found) {
         red();
-        printf("No matching records found.\n");
+        printf("\nNo matching records found.\n");
     }
 }
 
@@ -610,6 +639,7 @@ void toLowercase(char* str) {
 void saveToFile(struct Patient* patientRecords, struct Event* eventStack) {
     FILE* file = fopen("health_records.txt", "w");
     if (file == NULL) {
+        red();
         printf("Error opening file for writing.\n");
         return;
     }
@@ -651,6 +681,7 @@ void saveToFile(struct Patient* patientRecords, struct Event* eventStack) {
 void loadFromFile() {
     FILE* file = fopen("health_records.txt", "r");
     if (file == NULL) {
+        red();
         printf("No existing data file found.\n");
         return;
     }
