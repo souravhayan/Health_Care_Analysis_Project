@@ -64,6 +64,7 @@ int main() {
     struct Event* eventStack = NULL;
 
     do {
+        printf("\n");
         printf("1. Calculate BMI\n");
         printf("2. Calculate Step Count\n");
         printf("3. Patient (Add and Display)\n");
@@ -71,7 +72,7 @@ int main() {
         printf("5. Blood Donation Information\n");
         printf("6. Exit\n");
 
-        printf("Enter your Choice (1-6): ");
+        printf("\nEnter your Choice (1-6): ");
         scanf("%d", &choice);
 
         switch (choice) {
@@ -85,7 +86,7 @@ int main() {
                 int subChoice;
                 printf("1. Add Patient\n");
                 printf("2. Display Patient Records\n");
-                printf("Enter sub-choice (1-2): ");
+                printf("\nEnter sub-choice (1-2): ");
                 scanf("%d", &subChoice);
 
                 switch (subChoice) {
@@ -95,7 +96,7 @@ int main() {
                         float height, weight;
 
                         printf("Enter patient name: ");
-                        scanf("%s", name);
+                        scanf(" %99[^\n]", name);
                         printf("Enter patient age: ");
                         scanf("%d", &age);
                         printf("Enter patient height (in cm): ");
@@ -116,57 +117,60 @@ int main() {
                 break;
             }
             case 4: {
-                int subChoice;
-                printf("1. Push Event into the Stack\n");
-                printf("2. Pop Event from the Stack\n");
-                printf("3. Display Upcoming Events\n");
-                printf("Enter sub-choice (1-3): ");
-                scanf("%d", &subChoice);
+    int subChoice;
+    printf("1. Create Event\n");
+    printf("2. Delete Event\n");
+    printf("3. Display Events\n");
+    printf("\nEnter sub-choice (1-3): ");
+    scanf("%d", &subChoice);
 
-                switch (subChoice) {
-                    case 1: {
-                        char eventName[100], date[20], place[50];
+    switch (subChoice) {
+        case 1: {
+            char eventName[100], date[20], place[50];
 
-                        printf("Enter Event Name: ");
-                        scanf("%s", eventName);
+            printf("Enter Event Name: ");
+            scanf(" %99[^\n]", eventName);
+            getchar();  // Consume the newline character
 
-                        printf("Enter Event Date: ");
-                        scanf("%s", date);
+            printf("Enter Event Date: ");
+            scanf(" %19[^\n]", date);
+            getchar();  // Consume the newline character
 
-                        printf("Enter Event Place: ");
-                        scanf("%s", place);
+            printf("Enter Event Place: ");
+            scanf("%s", place);
 
-                        struct Event* newEvent = createEvent(eventName, date, place);
-                        pushEvent(&eventStack, newEvent);
-                        break;
-                    }
-                    case 2: {
-                        struct Event* poppedEvent = popEvent(&eventStack);
-                        if (poppedEvent != NULL) {
-                            printf("Popped Event from Stack:\n");
-                            printf("Event Name: %s\n", poppedEvent->eventName);
-                            printf("Date: %s\n", poppedEvent->date);
-                            printf("Place: %s\n", poppedEvent->place);
-                            printf("\n");
-                        }
-                        break;
-                    }
-                    case 3:
-                        displayEvents(eventStack);
-                        break;
-                    default:
-                        printf("Invalid sub-choice.\n");
-                        break;
-                }
-                break;
+            struct Event* newEvent = createEvent(eventName, date, place);
+            pushEvent(&eventStack, newEvent);
+            break;
+        }
+        case 2: {
+            struct Event* poppedEvent = popEvent(&eventStack);
+            if (poppedEvent != NULL) {
+                printf("Popped Event from Stack:\n");
+                printf("Event Name: %s\n", poppedEvent->eventName);
+                printf("Date: %s\n", poppedEvent->date);
+                printf("Place: %s\n", poppedEvent->place);
+                printf("\n");
             }
+            break;
+        }
+        case 3:
+            displayEvents(eventStack);
+            break;
+        default:
+            printf("Invalid sub-choice.\n");
+            break;
+    }
+    break;
+}
+
             case 5: {
                 int subChoice;
                 printf("1. Add Blood Donation Information\n");
                 printf("2. Delete Blood Donation Information\n");
                 printf("3. Display Blood Donation Information\n");
                 printf("4. Search Blood Donation Information\n");
-                printf("Enter sub-choice (1-4): ");
+                printf("\nEnter sub-choice (1-4): ");
                 scanf("%d", &subChoice);
 
                 switch (subChoice) {
@@ -263,7 +267,7 @@ int main() {
                 printf("Invalid choice.\n");
         }
 
-        printf("Press 1 for RUN Again or Press any key to EXIT!\n");
+        printf("\nPress 1 for RUN Again or Press any key to EXIT!\n");
         scanf("%d", &ch2);
     } while (ch2 == 1);
 
@@ -301,7 +305,7 @@ void insertPatient(struct Patient** head, struct Patient* newPatient) {
 
 void displayPatients(struct Patient* head) {
     struct Patient* current = head;
-    printf("Patient Records:\n");
+    printf("\n\nPatient Records:\n----------------\n\n");
     while (current != NULL) {
         printf("Name: %s\n", current->name);
         printf("Age: %d\n", current->age);
@@ -317,7 +321,7 @@ void calculateBMI() {
      float weight, height, result, bmi;
     printf("+---------------------+\n| BMI Report Analysis |\n+---------------------+\n\n");
     printf("BMI-range scale_\n");
-    printf("===!====!=======!======!======!===\n  15  18.5      25     30     35\n\n");
+    printf("-----!-----!-------!------!------!---\n     15  18.5      25     30     35\n\n");
     printf("Enter your weight (kg): ");
     scanf("%f", &weight);
 
@@ -330,26 +334,28 @@ void calculateBMI() {
     printf("Your BMI is: %.1f --> ", bmi);
 
     if (bmi < 18.5) {
-        printf("bad health\n\n");
+        printf("Bad Health\n\n");
         if (bmi >= 17) {
-            printf("=+=!====!=======!======!======!===\n  15  18.5      25     30     35\n");
+            printf("-+-!-----!-------!------!------!---\n     15  18.5    25     30     35\n");
         } else {
-            printf("+==!====!=======!======!======!===\n  15  18.5      25     30     35\n");
+            printf("+--!-----!-------!------!------!---\n     15  18.5    25     30     35\n");
         }
     } else if (bmi > 18.4 && bmi < 25.1) {
-        printf("good health\n\n");
+        printf("Good Health\n\n");
         if (bmi <= 20) {
-            printf("===!====!==+====!======!======!===\n  15  18.5      25     30     35\n");
+            printf("-----!-----!-+----!------!------!---\n     15  18.5    25     30     35\n");
         } else {
-            printf("===!====!=====+=!======!======!===\n  15  18.5      25     30     35\n");
+            printf("-----!-----!----+-!------!------!---\n     15  18.5    25     30     35\n");
         }
     } else if (bmi > 25 && bmi < 30) {
-        printf("bad health 😅\n");
+        printf("Bad Health \n");
+        printf("-----!-----!------!--+---!------!---\n     15  18.5    25     30     35\n");
     } else {
-        printf("bad health\n");
+        printf("Bad Health\n");
     }
 
-    printf("Thank you!\n");
+    printf("Thank You!\n");
+
 }
 
 void calculateStepCount() {
@@ -365,7 +371,7 @@ void calculateStepCount() {
 
     step = (km * limit) / kmf;
 
-    printf("Your step counted: %.0f steps\n", step);
+    printf("Your step counted: %.0f steps (approximate)\n", step);
 
     percent = (step * 100) / limit;
 
@@ -413,7 +419,7 @@ struct Event* popEvent(struct Event** top) {
 
 void displayEvents(struct Event* top) {
      struct Event* current = top;
-    printf("Upcoming Events:\n");
+    printf("\nUpcoming Events:\n");
     while (current != NULL) {
         printf("Event Name: %s\n", current->eventName);
         printf("Date: %s\n", current->date);
