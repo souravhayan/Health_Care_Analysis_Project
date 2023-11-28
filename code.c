@@ -154,8 +154,8 @@ int main() {
         printf("1. Calculate BMI\n");
         printf("2. Calculate Step Count\n");
         printf("3. Patient Information\n");
-        printf("4. Blood Donation Information\n");  // Moved Blood Donation Information to option 4
-        printf("5. Events\n");  // Moved Events to option 5
+        printf("4. Blood Donation Information\n"); 
+        printf("5. Events\n"); 
         printf("6. Exit\n");
         yellow();
         printf("\nEnter your Choice (1-6): ");
@@ -312,11 +312,11 @@ int main() {
             blue();
             printf("Enter Event Name: ");
             scanf(" %99[^\n]", eventName);
-            getchar();  // Consume the newline character
+            getchar(); 
 
             printf("Enter Event Date: ");
             scanf(" %19[^\n]", date);
-            getchar();  // Consume the newline character
+            getchar();
 
             printf("Enter Event Place: ");
             scanf("%s", place);
@@ -473,6 +473,7 @@ void calculateBMI() {
      else {
         printf("Bad Health\n");
     }
+
     green();
     printf("\n_____Thank You!_____\n");
 
@@ -558,7 +559,6 @@ void displayEvents(struct Event* top) {
     }
 }
 
-
 struct DonationInfo* createDonationInfo(const char* donorName, const char* bloodType, const char* donationDate,
                                         const char* location, const char* mobileNumber) {
     struct DonationInfo* newDonation = (struct DonationInfo*)malloc(sizeof(struct DonationInfo));
@@ -580,6 +580,7 @@ struct DonationInfo* createDonationInfo(const char* donorName, const char* blood
 void push(struct DonationInfo* donationInfo) {
     struct StackNode* newNode = (struct StackNode*)malloc(sizeof(struct StackNode));
     if (newNode == NULL) {
+        red();
         printf("Memory allocation failed.\n");
         exit(1);
     }
@@ -591,7 +592,8 @@ void push(struct DonationInfo* donationInfo) {
 
 struct DonationInfo* pop() {
     if (top == NULL) {
-        printf("STACK UNDERFLOW!\n");
+        red();
+        printf("LIST IS NOT AVAILABLE.\n");
         return NULL;
     }
 
@@ -707,7 +709,6 @@ void saveToFile(struct Patient* patientRecords, struct Event* eventStack) {
         return;
     }
 
-    // Save patient information
     struct Patient* currentPatient = patientRecords;
     while (currentPatient != NULL) {
         fprintf(file, "Patient %s %d %.2f %.2f %.2f\n", currentPatient->name, currentPatient->age,
@@ -716,7 +717,6 @@ void saveToFile(struct Patient* patientRecords, struct Event* eventStack) {
         currentPatient = currentPatient->next;
     }
 
-    // Save event information
     struct Event* currentEvent = eventStack;
     while (currentEvent != NULL) {
         fprintf(file, "Event %s %s %s\n", currentEvent->eventName, currentEvent->date, currentEvent->place);
@@ -724,7 +724,6 @@ void saveToFile(struct Patient* patientRecords, struct Event* eventStack) {
         currentEvent = currentEvent->next;
     }
 
-    // Save blood donor information
     struct StackNode* currentDonation = top;
     while (currentDonation != NULL) {
         fprintf(file, "Donor %s %s %s %s %s\n", currentDonation->donationInfo->donorName,
@@ -738,8 +737,6 @@ void saveToFile(struct Patient* patientRecords, struct Event* eventStack) {
 
     printf("Data saved to health_records.txt\n");
 }
-
-
 
 void loadFromFile() {
     FILE* file = fopen("health_records.txt", "r");
@@ -775,4 +772,3 @@ void loadFromFile() {
 
     fclose(file);
 }
-
